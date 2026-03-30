@@ -6,7 +6,7 @@ model: GPT-5.4 (copilot)
 target: vscode
 user-invocable: true
 disable-model-invocation: true
-tools: ["vscode/askQuestions", "read", "search", "web", "context7/*", "agent", "vscode/memory"]
+tools: ["vscode/askQuestions", "read", "search", "web", "io.github.upstash/context7/*", "agent", "vscode/memory"]
 agents: ["Explore"]
 ---
 

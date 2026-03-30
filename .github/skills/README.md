@@ -15,6 +15,14 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 
 ## Quick routing hints
 
+- **General ROS 2 packages, nodes, launch, QoS, and parameters** → `ros2-best-practices`
+- **ROS 2 C++ / rclcpp node design and package patterns** → `ros2-cpp-patterns`
+- **ROS 2 Python / rclpy node design and packaging** → `ros2-python-patterns`
+- **ROS 2 lifecycle / managed nodes / activation sequencing** → `ros2-lifecycle-patterns`
+- **ros2_control / controller manager / hardware interfaces** → `ros2-control-best-practices`
+- **ROS 2 testing / launch testing / graph verification** → `ros2-testing-qa`
+- **ROS 2 real-time / deterministic execution** → `realtime-ros2-optimization`
+- **ROS 1 to ROS 2 migration** → `ros1-to-ros2-migration`
 - **General Kotlin/KMP architecture** → `kotlin`
 - **Kotlin + Spring Data JPA / Hibernate entities** → `kotlin-backend-jpa-entity-mapping`
 - **KMP / AGP 9+ migration** → `kotlin-tooling-agp9-migration`
@@ -72,6 +80,14 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 
 | Skill | Use for | Common triggers |
 | --- | --- | --- |
+| `ros2-best-practices` | Broad ROS 2 application structure, packages, launch, QoS, parameters, and operability | ROS 2, node design, launch, QoS, parameters, package layout |
+| `ros2-cpp-patterns` | ROS 2 C++ node design, ownership, package layout, callbacks, parameters, and components | rclcpp, ROS 2 C++, node class, callback design, components |
+| `ros2-python-patterns` | ROS 2 Python node design, packaging, callbacks, parameters, and runtime behavior | rclpy, ROS 2 Python, console_scripts, Python node, callbacks |
+| `ros2-lifecycle-patterns` | Managed-node transitions, activation/deactivation boundaries, and lifecycle-aware orchestration | lifecycle, managed node, activate, deactivate, transition |
+| `ros2-control-best-practices` | ros2_control hardware, controller_manager, controller config, and startup/runtime behavior | ros2_control, controller_manager, hardware interface, controller spawner |
+| `ros2-testing-qa` | ROS 2 testing, launch testing, graph verification, parameter checks, and runtime validation | launch_testing, ROS 2 tests, QoS test, parameter test, graph wiring |
+| `realtime-ros2-optimization` | Deterministic ROS 2 execution, callback groups, wait sets, jitter reduction, and real-time safety | ROS 2 realtime, executor, callback groups, control loop, jitter |
+| `ros1-to-ros2-migration` | ROS 1 package, launch, parameter, and API migration to ROS 2 | ROS 1 migration, catkin, rospy, roscpp, ros1_bridge |
 | `typescript-patterns` | Safe TypeScript app code, APIs, and UI state | TypeScript, types, frontend state, API client |
 | `api-design` | Designing and evolving APIs safely | API design, contracts, versioning, integration |
 | `database-optimization` | Query tuning, schema choices, and DB performance work | slow query, indexes, schema, DB performance |

@@ -304,6 +304,14 @@ For a concise catalog of available skills and when to use each one, see
 
 Important skills:
 
+- `.github/skills/ros2-best-practices/SKILL.md:1` — general ROS 2 package, node, launch, QoS, and parameter guidance for Humble-era systems
+- `.github/skills/ros2-cpp-patterns/SKILL.md:1` — ROS 2 C++ and `rclcpp` design guidance for nodes, callbacks, parameters, and components
+- `.github/skills/ros2-python-patterns/SKILL.md:1` — ROS 2 Python and `rclpy` design guidance for nodes, packaging, parameters, and runtime behavior
+- `.github/skills/ros2-lifecycle-patterns/SKILL.md:1` — lifecycle-managed node guidance for transitions, activation boundaries, and orchestration
+- `.github/skills/ros2-control-best-practices/SKILL.md:1` — `ros2_control` guidance for hardware interfaces, controller manager, controller config, and startup behavior
+- `.github/skills/ros2-testing-qa/SKILL.md:1` — ROS 2 testing and launch-testing guidance for graph wiring, parameters, QoS, and deployment behavior
+- `.github/skills/realtime-ros2-optimization/SKILL.md:1` — deterministic ROS 2 execution, callback groups, wait sets, QoS, and Humble real-time guidance
+- `.github/skills/ros1-to-ros2-migration/SKILL.md:1` — practical Humble-focused migration guidance for catkin, launch, parameters, and interop
 - `.github/skills/kotlin-backend-jpa-entity-mapping/SKILL.md:1` — Kotlin + Spring Data JPA/Hibernate entity design, identity, uniqueness constraints, and ORM traps
 - `.github/skills/kotlin-tooling-agp9-migration/SKILL.md:1` — KMP / Android Gradle Plugin 9+ migration guide with bundled `assets/`, `references/`, and `scripts`
 - `.github/skills/planning-structure/SKILL.md:1` — planning tracks, epics, readiness gate, plan delta

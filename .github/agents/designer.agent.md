@@ -11,7 +11,7 @@ tools:
     "vscode",
     "execute",
     "read",
-    "context7/*",
+    "io.github.upstash/context7/*",
     "edit",
     "search",
     "web",
