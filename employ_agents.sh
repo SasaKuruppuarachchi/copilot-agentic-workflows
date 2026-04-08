@@ -24,59 +24,61 @@ GITIGNORE_ENTRIES=(
 # Ensure the target directory exists
 mkdir -p "$TARGET_DIR"
 
-echo "Checking dependencies..."
-if ! command -v git &> /dev/null || ! command -v rsync &> /dev/null; then
-    echo "Error: git and rsync are required."
-    exit 1
-fi
-
-# Function to update or create .gitignore
+# 1. Update or create .gitignore
 update_gitignore() {
     local ignore_file="$TARGET_DIR/.gitignore"
-    echo "--- Updating .gitignore in $TARGET_DIR ---"
-    
-    # Create file if it doesn't exist
-    if [ ! -f "$ignore_file" ]; then
-        touch "$ignore_file"
-        echo "Created new .gitignore file."
-    fi
+    echo "--- Updating .gitignore ---"
+    [ ! -f "$ignore_file" ] && touch "$ignore_file" && echo "Created .gitignore"
 
     for entry in "${GITIGNORE_ENTRIES[@]}"; do
-        # Check if entry already exists to avoid duplicates
         if ! grep -qxF "$entry" "$ignore_file"; then
             echo "$entry" >> "$ignore_file"
-            echo "Added $entry to .gitignore"
-        else
-            echo "Entry $entry already exists, skipping."
+            echo "Added $entry"
         fi
     done
 }
 
-# 1. Handle .gitignore first
 update_gitignore
 
-# 2. Create a temporary directory for a sparse clone
-echo "Cloning repository temporarily..."
+# 2. Clone repository temporarily
+echo "Cloning repository..."
 git clone --depth 1 --filter=blob:none --sparse "$REPO_URL" "$TEMP_DIR"
 cd "$TEMP_DIR" || exit
 git sparse-checkout set "${TARGET_FOLDERS[@]}"
 cd ..
 
-# 3. Loop through the folders and sync them
+# 3. Determine Overwrite Strategy
+REPLACE_ALL="n"
+EXISTING_FOUND=false
+
+# Check if any of the folders already exist in the target
+for folder in "${TARGET_FOLDERS[@]}"; do
+    if [ -d "$TARGET_DIR/$folder" ]; then
+        EXISTING_FOUND=true
+        break
+    fi
+done
+
+if [ "$EXISTING_FOUND" = true ]; then
+    read -p "Existing folders found in $TARGET_DIR. Replace all files? (y/n): " confirm
+    [[ "$confirm" == [yY] ]] && REPLACE_ALL="y"
+fi
+
+# 4. Sync folders
 for folder in "${TARGET_FOLDERS[@]}"; do
     if [ -d "$TEMP_DIR/$folder" ]; then
-        echo "--- Processing $folder -> $TARGET_DIR/$folder ---"
-        
-        # -r: recursive
-        # -i: interactive (will ask before overwriting files)
-        cp -ri "$TEMP_DIR/$folder" "$TARGET_DIR/"
-    else
-        echo "Warning: Folder $folder not found in the repository."
+        echo "Syncing $folder..."
+        if [ "$REPLACE_ALL" == "y" ]; then
+            # rsync -a: archive mode
+            # --delete: (optional) remove files in target that aren't in source
+            rsync -ah --progress "$TEMP_DIR/$folder/" "$TARGET_DIR/$folder/"
+        else
+            # --ignore-existing: Only copy files that don't exist in the target
+            rsync -ah --progress --ignore-existing "$TEMP_DIR/$folder/" "$TARGET_DIR/$folder/"
+        fi
     fi
 done
 
 # Cleanup
-echo "Cleaning up temporary files..."
 rm -rf "$TEMP_DIR"
-
-echo "Success: Folders merged and .gitignore updated in $TARGET_DIR"
+echo "--- Process Complete ---"

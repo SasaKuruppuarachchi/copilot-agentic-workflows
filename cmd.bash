@@ -1,0 +1,1 @@
+curl -fsSL https://raw.githubusercontent.com/SasaKuruppuarachchi/copilot-agentic-workflows/main/employ_agents.sh -o employ_agents.sh && chmod +x employ_agents.sh && ./employ_agents.sh . && rm employ_agents.sh
