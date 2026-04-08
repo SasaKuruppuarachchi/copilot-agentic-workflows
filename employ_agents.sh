@@ -12,6 +12,15 @@ REPO_URL="https://github.com/SasaKuruppuarachchi/copilot-agentic-workflows.git"
 TARGET_FOLDERS=(".github" ".agent-memory")
 TEMP_DIR="temp_repo_clone_$(date +%s)"
 
+# Patterns to add to .gitignore
+GITIGNORE_ENTRIES=(
+    ".agent-memory/"
+    ".github/agents"
+    ".github/skills"
+    "ideas/"
+    ".vscode/"
+)
+
 # Ensure the target directory exists
 mkdir -p "$TARGET_DIR"
 
@@ -21,27 +30,45 @@ if ! command -v git &> /dev/null || ! command -v rsync &> /dev/null; then
     exit 1
 fi
 
-# Create a temporary directory for a sparse clone
+# Function to update or create .gitignore
+update_gitignore() {
+    local ignore_file="$TARGET_DIR/.gitignore"
+    echo "--- Updating .gitignore in $TARGET_DIR ---"
+    
+    # Create file if it doesn't exist
+    if [ ! -f "$ignore_file" ]; then
+        touch "$ignore_file"
+        echo "Created new .gitignore file."
+    fi
+
+    for entry in "${GITIGNORE_ENTRIES[@]}"; do
+        # Check if entry already exists to avoid duplicates
+        if ! grep -qxF "$entry" "$ignore_file"; then
+            echo "$entry" >> "$ignore_file"
+            echo "Added $entry to .gitignore"
+        else
+            echo "Entry $entry already exists, skipping."
+        fi
+    done
+}
+
+# 1. Handle .gitignore first
+update_gitignore
+
+# 2. Create a temporary directory for a sparse clone
 echo "Cloning repository temporarily..."
 git clone --depth 1 --filter=blob:none --sparse "$REPO_URL" "$TEMP_DIR"
 cd "$TEMP_DIR" || exit
 git sparse-checkout set "${TARGET_FOLDERS[@]}"
 cd ..
 
-# Loop through the folders and sync them
+# 3. Loop through the folders and sync them
 for folder in "${TARGET_FOLDERS[@]}"; do
     if [ -d "$TEMP_DIR/$folder" ]; then
         echo "--- Processing $folder -> $TARGET_DIR/$folder ---"
         
-        # rsync flags:
-        # -a: archive (preserve permissions/timestamps)
-        # -v: verbose
-        # -h: human-readable
-        # --ignore-existing: skip files that already exist in the target
-        # To handle "ask and replace", we use a loop with 'cp -i' for granular control
-        # or rsync's update flag. Here we use rsync for the merge, then 
-        # interactive copy for the actual file placement to ensure it prompts you.
-        
+        # -r: recursive
+        # -i: interactive (will ask before overwriting files)
         cp -ri "$TEMP_DIR/$folder" "$TARGET_DIR/"
     else
         echo "Warning: Folder $folder not found in the repository."
@@ -52,4 +79,4 @@ done
 echo "Cleaning up temporary files..."
 rm -rf "$TEMP_DIR"
 
-echo "Success: Folders merged into $TARGET_DIR"
+echo "Success: Folders merged and .gitignore updated in $TARGET_DIR"
