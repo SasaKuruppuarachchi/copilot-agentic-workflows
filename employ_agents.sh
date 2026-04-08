@@ -29,8 +29,20 @@ mkdir -p "$TARGET_DIR"
 update_gitignore() {
     local ignore_file="$TARGET_DIR/.gitignore"
     echo "--- Updating .gitignore ---"
-    [ ! -f "$ignore_file" ] && touch "$ignore_file" && echo "Created .gitignore"
+    
+    # 1. Create file if it doesn't exist
+    if [ ! -f "$ignore_file" ]; then
+        touch "$ignore_file"
+        echo "Created .gitignore"
+    else
+        # 2. Fix missing newline at end of file if it exists
+        # If the last character is not a newline, append one
+        if [ -n "$(tail -c 1 "$ignore_file")" ]; then
+            echo "" >> "$ignore_file"
+        fi
+    fi
 
+    # 3. Append entries
     for entry in "${GITIGNORE_ENTRIES[@]}"; do
         if ! grep -qxF "$entry" "$ignore_file"; then
             echo "$entry" >> "$ignore_file"
