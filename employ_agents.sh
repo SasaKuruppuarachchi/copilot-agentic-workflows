@@ -14,6 +14,7 @@ TEMP_DIR="temp_repo_clone_$(date +%s)"
 
 # Patterns to add to .gitignore
 GITIGNORE_ENTRIES=(
+    ""
     ".agent-memory/"
     ".github/agents"
     ".github/skills"
