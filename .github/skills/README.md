@@ -42,6 +42,7 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 - **Testing / verification** → `testing-qa`
 - **Security review baseline** → `security-best-practices`
 - **Shared review contract** → `review-core`
+- **Independent review routing / review gates** → `review-orchestration`
 - **Multi-model review orchestration** → `multi-model-review`
 - **Parallel isolated work using git worktrees** → `git-worktree`
 - **Memory boundaries and durable repo memory** → `memory-management`
@@ -54,6 +55,7 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 | `research-discovery` | Fast broad-to-narrow read-only discovery before planning or routing | discover, scout, map codebase, entry points, reuse search |
 | `memory-management` | Durable vs session memory rules and memory sync workflow | memory update, durable knowledge, `.agent-memory`, session notes |
 | `git-worktree` | Isolated parallel work for risky refactors or overlapping file ownership | worktree, parallel branch, isolation, risky refactor |
+| `review-orchestration` | Review routing, independent review gates, and optimization follow-up | review gate, post-implementation review, multi-review, cleanup pass |
 
 ## Review and quality skills
 
@@ -63,6 +65,7 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 | `testing-qa` | Unit, integration, and end-to-end verification strategy | tests, verification, QA, regressions |
 | `security-best-practices` | Secure coding, auth, validation, and defense-in-depth | security, auth, input validation, secrets, hardening |
 | `review-core` | Shared contract for independent reviewers and durable findings | audit, review contract, findings normalization |
+| `review-orchestration` | When to review, when to skip, and how to route review follow-up | independent review, review gate, reviewer routing |
 | `multi-model-review` | Consensus-based multi-review and false-positive triage | multi-review, reviewer consolidation, conflicts |
 
 ## Frontend and platform skills

@@ -190,3 +190,41 @@ After every write or modification to `.agent-memory/`:
 - **Read-Back**: You MUST read the file back to verify the entry was correctly appended/merged.
 - **Consistency Check**: Ensure the new entry doesn't contradict existing high-priority decisions.
 - **Success Report**: Explicitly state `Memory Transaction Successful: <reason>` in the output.
+
+---
+
+## 11. Orchestrator Memory Governance
+
+Use this section when the Orchestrator is deciding whether a run needs durable memory updates.
+
+### Read-First Rule
+
+Before non-trivial planning, implementation, review, or debugging:
+
+1. read `.agent-memory/project_decisions.md`
+2. read `.agent-memory/error_patterns.md`
+3. read `.agent-memory/archive/*` only if needed to resolve contradictions or prior context
+
+### Trigger Rules
+
+Require a memory update when at least one is true:
+
+1. architectural decision or invariant changed
+2. recurring bug/anti-pattern with fix and prevention was confirmed
+3. a verified bug fix produced a durable lesson
+4. feature or behavior changed in a way future agents should know
+5. `>= 2` files changed or the refactor was non-trivial
+6. review produced a durable repo rule-of-thumb
+7. CI/build/test gating changed
+8. dependency change affects maintenance or risk
+9. the user explicitly asked to persist the outcome
+10. onboarding or project familiarization occurred
+
+Skip durable memory only for mechanical, low-risk, trivial work.
+
+### Enforcement
+
+1. if `Planner` says `Memory Update: REQUIRED`, the task cannot close without a memory transaction or an explicit user override
+2. if an executor returns a meaningful `Memory Candidate`, evaluate it against the trigger rules above
+3. delegate memory writes with `ALLOW_MEMORY_UPDATE=true`
+4. require `Memory Transaction Successful: <reason>` before task close-out

@@ -227,3 +227,33 @@ After every worktree session, Orchestrator must verify:
 - [ ] Worktree removed (`git worktree remove`)
 - [ ] Worktree branch deleted (`git branch -d`)
 - [ ] No stale entries (`git worktree prune`)
+
+---
+
+## 6. Orchestrator Decision Policy
+
+Use this section when the Orchestrator is deciding whether to introduce a worktree.
+
+### Use a Worktree When
+
+At least one is true:
+
+1. parallel tasks must touch overlapping files
+2. risky refactor or rollback safety requires filesystem isolation
+3. debugging needs a clean reproduction environment separate from in-flight work
+4. Multi-Hive execution requires isolated branch ownership
+
+### Do NOT Use a Worktree When
+
+All are true:
+
+1. file scopes are already disjoint
+2. work can run sequentially without major delay
+3. no isolation or rollback benefit exists
+
+### Ownership Rules
+
+1. Orchestrator alone creates, merges, and removes worktrees
+2. delegated agents work only inside the provided worktree path
+3. delegated agents do not create, remove, or merge worktrees
+4. cleanup is mandatory after merge or abandonment

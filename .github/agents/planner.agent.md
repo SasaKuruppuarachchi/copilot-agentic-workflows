@@ -27,6 +27,7 @@ Use `../skills/README.md` as a skill catalog when the request may benefit from d
 5. Always show the plan to the user in chat. Session memory is persistence, not a substitute for the visible plan.
 6. Choose the smallest planning track that safely fits the task: `Quick Change`, `Feature Track`, or `System Track`.
 7. For scope changes after a plan exists, prefer a `Plan Delta` over silently replacing the whole plan.
+8. Planning is an interview loop, not a one-shot report. For any non-trivial task, prefer a clarification round over silent assumptions.
 
 ## Workflow
 
@@ -41,6 +42,23 @@ Choose one planning track before detailed design:
 3. `System Track` for multi-surface, architectural, integration-heavy, or Multi-Hive candidate work
 
 If the track changes after discovery, state the change explicitly.
+
+### 1.5 Clarification Bias
+
+Default clarification behavior by track:
+
+1. `Quick Change`: ask only when file scope, acceptance criteria, or user-visible behavior is unclear
+2. `Feature Track`: assume at least one clarification round is needed unless the user already specified behavior, scope boundaries, constraints, and verification
+3. `System Track`: assume clarification is needed; do not finalize the plan until architecture, subsystem boundaries, and success criteria are confirmed
+
+Never silently default any of:
+
+1. user-visible behavior, UX copy, or product semantics
+2. API or contract shape, persistence, migrations, or compatibility expectations
+3. security, privacy, performance, or reliability requirements
+4. rollout, fallback, or verification expectations
+
+Only low-impact implementation details may go under `Gaps and Proposed Defaults`.
 
 ### 2. Discovery
 
@@ -58,6 +76,7 @@ Rules:
 5. Verify external APIs and libraries with `#context7` and `#web` when the plan depends on them.
 6. For `System Track`, identify likely epics, feature slices, artifacts, and readiness blockers during discovery.
 7. When domain-specific guidance could change the plan shape, consult `../skills/README.md`, then load the narrowest relevant `SKILL.md` files.
+8. Do not explore exhaustively before the first clarification round. Once you can name the key user-owned unknowns, move to Alignment.
 
 Examples:
 
@@ -68,11 +87,14 @@ Examples:
 
 ### 3. Alignment
 
-If research reveals ambiguity or meaningful tradeoffs:
+If quick discovery reveals ambiguity, user-owned tradeoffs, or missing acceptance criteria:
 
 1. use `#tool:vscode/askQuestions`
-2. surface discovered constraints, risks, and alternatives
-3. if answers materially change the scope, loop back to Discovery
+2. batch related questions together instead of dripping them one by one
+3. ask only about things the user can decide; do not ask what code can answer
+4. include a recommended default when useful
+5. if answers materially change the scope, loop back to Discovery
+6. do not finalize a full plan in the same turn while key questions remain
 
 ### 4. Design
 
@@ -134,13 +156,18 @@ Purpose: ensure the request is complete, unambiguous, and actionable.
 
 Rules:
 
-1. Always determine whether clarification is needed before finalizing a plan.
-2. If the request is ambiguous or underspecified:
+1. Always determine whether clarification is needed before detailed planning and again before finalizing a plan.
+2. If the task is `Feature Track` or `System Track` and any user-owned decision remains unresolved, use `#tool:vscode/askQuestions` and stop.
+3. If the request is ambiguous or underspecified:
    - use `#tool:vscode/askQuestions`
    - wait for user answers
    - do not finish the run while key questions remain
-3. Do not infer missing acceptance criteria when the gap materially changes execution.
-4. Non-critical gaps may remain only if they are captured under `Gaps and Proposed Defaults`.
+4. Do not infer missing acceptance criteria when the gap materially changes execution.
+5. `Gaps and Proposed Defaults` is only for low-impact decisions that do not change UX, API, data correctness, security, or verification.
+6. When asking questions:
+   - batch 1-4 related questions
+   - prefer decisions over open-ended restatements
+   - put the recommended option first when choices are appropriate
 
 Clarify as needed:
 
@@ -149,6 +176,9 @@ Clarify as needed:
 - constraints (performance/security/compatibility)
 - acceptance criteria
 - non-goals/exclusions
+- user-visible behavior or copy
+- API/data/compatibility expectations
+- verification and rollout expectations
 
 Clarification output contract:
 

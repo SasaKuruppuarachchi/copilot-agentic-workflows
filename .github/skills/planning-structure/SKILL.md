@@ -150,7 +150,26 @@ When scope changes after a plan already exists, do not rewrite from scratch firs
 5. whether readiness changed
 6. whether routing or Multi-Hive strategy changed
 
-## 9. Anti-Patterns
+## 9. Clarification Bias
+
+Treat planning as an interview loop, not a one-shot report.
+
+Use clarification aggressively when the unresolved point affects:
+
+1. user-visible behavior, UX copy, or product semantics
+2. API contracts, schema, persistence, migration, or compatibility behavior
+3. security, privacy, performance, or reliability expectations
+4. verification, rollout, fallback, or non-goal boundaries
+
+Default clarification behavior by track:
+
+1. `Quick Change`: ask only when scope or acceptance criteria are not clear
+2. `Feature Track`: expect at least one clarification round unless the request is already explicit
+3. `System Track`: expect clarification and do not force execution-readiness until user-owned decisions are resolved
+
+`Gaps and Proposed Defaults` is only for low-impact implementation details. If the gap changes UX, API, data correctness, security, or verification, ask instead of defaulting.
+
+## 10. Anti-Patterns
 
 Avoid:
 

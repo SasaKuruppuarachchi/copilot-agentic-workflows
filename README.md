@@ -7,6 +7,7 @@ This repo gives you a ready-to-adapt control plane for VS Code Agents:
 - 🧭 one strong user-facing orchestrator instead of agent chaos
 - 🧠 structured planning with tracks, epics, readiness gates, and plan deltas
 - 🕵️ hidden specialist workers for coding, review, debugging, and discovery
+- ✅ independent acceptance verification after review
 - 🧰 reusable internal skills instead of bloated prompts
 - 🗂️ template-based durable memory that downstream projects can safely adopt
 
@@ -16,6 +17,7 @@ This repo gives you a ready-to-adapt control plane for VS Code Agents:
 
 - **🧠 Memory That Doesn’t Rot the Repo**: Durable knowledge goes to `.agent-memory/`; draft plans, breadcrumbs, and temporary context stay in session memory. You keep the benefits of memory without polluting a reusable open-source template.
 - **🎛️ One Real Control Plane**: `Orchestrator` owns routing, review, debug loops, memory decisions, worktree strategy, and `/delegate` boundaries. This is not “a bag of agents” — it is a governed system.
+- **✅ Independent Acceptance Gate**: `Verifier` validates changes after implementation and review using objective signals like tests, build/typecheck/lint, and targeted smoke checks. Passing review is not the same thing as being ready to close.
 - **🕵️ Hidden Discovery Engine**: `Explore` gives you fast broad-to-narrow scouting, plus parallel `x2` / `x3` discovery for multi-surface tasks, while staying invisible to end users who should not call internal workers directly.
 - **📐 Planning With Structure**: `Planner` works with explicit tracks — `Quick Change`, `Feature Track`, `System Track` — and produces plans with scope, slices/epics, dependencies, verification, gaps/defaults, and Multi-Hive decisions.
 - **🛡️ Readiness Gates Before Code**: The system can block execution with `Implementation Readiness: BLOCKED` when scope is fuzzy, dependencies are missing, or verification is weak. It prefers clarity over fake momentum.
@@ -63,7 +65,8 @@ project_root/
 │   │   ├── reviewer-gpt.agent.md
 │   │   ├── reviewer-gemini.agent.md
 │   │   ├── multi-reviewer.agent.md
-│   │   └── debugger.agent.md
+│   │   ├── debugger.agent.md
+│   │   └── verifier.agent.md
 │   └── skills/
 │       ├── kotlin-backend-jpa-entity-mapping/
 │       ├── kotlin-tooling-agp9-migration/
@@ -94,6 +97,7 @@ project_root/
 - `.github/agents/reviewer-gemini.agent.md:1` — review subagent
 - `.github/agents/multi-reviewer.agent.md:1` — consolidates multi-review output
 - `.github/agents/debugger.agent.md:1` — reproducible bug diagnosis and fix flow
+- `.github/agents/verifier.agent.md:1` — independent acceptance verification using objective checks
 
 All internal agents are hidden with `user-invocable: false` and guarded with `disable-model-invocation: true`.
 
@@ -107,7 +111,7 @@ All internal agents are hidden with `user-invocable: false` and guarded with `di
 - performs only lightweight triage, routing, and governance
 - delegates all file changes to coding/debug agents
 - routes by task type and planning track
-- decides when to use review, debug, worktrees, and `/delegate`
+- decides when to use review, verification, debug, worktrees, and `/delegate`
 - enforces memory-write policy for durable outcomes
 
 `Orchestrator` is not a deep problem-framing agent:
@@ -151,6 +155,17 @@ Routing policy:
 - `PARALLEL x2` for two mostly independent research tracks
 - `PARALLEL x3` only for larger multi-surface planning or multi-hive decomposition
 
+### Verifier
+
+`Verifier` is a hidden non-authoring acceptance gate used after implementation and review.
+
+It:
+
+- runs objective checks such as tests, lint, typecheck, builds, and targeted smoke verification
+- validates readiness using executed signals rather than code inspection
+- returns `Verification Verdict: PASS` or `BLOCKED`
+- stays independent from the coding/debugging agent that produced the patch
+
 ## Architecture Diagrams
 
 ### Control plane
@@ -177,14 +192,16 @@ flowchart TD
     EXEC -- "Complex change" --> CS["🛠️ CoderSr"]
     EXEC -- "UI-only" --> D["🎨 Designer"]
     EXEC -- "Repro bug" --> DBG["🐞 Debugger"]
-    EXEC -- "Audit / review" --> RV["🔍 Reviewer path"]
+    EXEC -- "Audit / review only" --> AUD["🔎 Reviewer path"]
 
-    CJ --> RV
+    CJ --> RV["🔍 Independent Review"]
     CS --> RV
     D --> RV
     DBG --> RV
 
-    RV --> DONE["✅ Verify / Report / Memory decision"]
+    RV --> V["✅ Verifier"]
+    AUD --> DONE
+    V --> DONE["📦 Report / Memory decision"]
 ```
 
 ## Planning Model
@@ -273,6 +290,7 @@ flowchart TD
 - UI-only implementation → `Designer`
 - review / audit → `Reviewer` or multi-review path
 - reproducible failure → `Debugger`
+- acceptance verification → `Verifier`
 
 Routing rule:
 
@@ -282,6 +300,12 @@ Routing rule:
 
 - single review → `Reviewer`
 - multi-review → `ReviewerGPT` + `ReviewerGemini` + `Reviewer` in parallel, then `MultiReviewer`
+
+### Acceptance verification
+
+- after non-trivial implementation or verified bugfix, run independent review first
+- after review and any follow-up fixes, run `Verifier`
+- close the task only after `Verifier` passes, unless a justified skip rule applies
 
 ### `/delegate`
 
@@ -319,6 +343,7 @@ Important skills:
 - `.github/skills/memory-management/SKILL.md:1` — durable vs session memory rules
 - `.github/skills/git-worktree/SKILL.md:1` — filesystem isolation for parallel work
 - `.github/skills/review-core/SKILL.md:1` — shared review contract
+- `.github/skills/review-orchestration/SKILL.md:1` — independent review gate, review routing, and optimization follow-up
 - `.github/skills/code-quality/SKILL.md:1` — implementation/review heuristics
 - `.github/skills/testing-qa/SKILL.md:1` — validation rules
 - `.github/skills/security-best-practices/SKILL.md:1` — security review baseline
