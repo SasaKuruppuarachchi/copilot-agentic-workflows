@@ -10,3 +10,6 @@ agents-assemble() {
     ./employ_agents.sh "$TARGET_DIR" && \
     rm employ_agents.sh
 }
+
+
+agents-assemble

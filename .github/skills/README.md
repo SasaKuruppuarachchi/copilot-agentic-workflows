@@ -22,6 +22,7 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 - **ros2_control / controller manager / hardware interfaces** → `ros2-control-best-practices`
 - **ROS 2 testing / launch testing / graph verification** → `ros2-testing-qa`
 - **ROS 2 real-time / deterministic execution** → `realtime-ros2-optimization`
+- **Extended Kalman Filter / EKF / state estimation / sensor fusion** → `ekf-state-estimation`
 - **ROS 1 to ROS 2 migration** → `ros1-to-ros2-migration`
 - **General Kotlin/KMP architecture** → `kotlin`
 - **Kotlin + Spring Data JPA / Hibernate entities** → `kotlin-backend-jpa-entity-mapping`
@@ -98,6 +99,7 @@ The source of truth remains each skill's own `SKILL.md` file and its `descriptio
 | `kotlin` | General Kotlin and KMP architecture, coroutines, repositories, and module structure | Kotlin, KMP, coroutines, use cases, repositories |
 | `kotlin-backend-jpa-entity-mapping` | Kotlin persistence modeling for Spring Data JPA and Hibernate | JPA entity, Hibernate, equals/hashCode, N+1, lazy loading |
 | `kotlin-tooling-agp9-migration` | Migrating KMP/Android projects to AGP 9+ and built-in Kotlin | AGP 9, KMP migration, built-in Kotlin, plugin swap |
+| `ekf-state-estimation` | EKF predict/update architecture, Jacobian correctness, covariance health, observability, and real-time integration | EKF, Kalman filter, state estimation, sensor fusion, IMU, localization, SLAM |
 
 ## Imported upstream skills
 
