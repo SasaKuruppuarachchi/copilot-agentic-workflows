@@ -9,7 +9,7 @@ fi
 
 TARGET_DIR="$1"
 REPO_URL="https://github.com/SasaKuruppuarachchi/copilot-agentic-workflows.git"
-TARGET_FOLDERS=(".github" ".agent-memory")
+TARGET_FOLDERS=(".github" ".agent-memory" ".guides")
 TEMP_DIR="temp_repo_clone_$(date +%s)"
 
 # Patterns to add to .gitignore
