@@ -18,6 +18,7 @@ GITIGNORE_ENTRIES=(
     ".agent-memory/"
     ".github/agents"
     ".github/skills"
+    ".guides/"
     "ideas/"
     ".vscode/"
 )
