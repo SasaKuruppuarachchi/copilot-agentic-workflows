@@ -76,7 +76,7 @@ Rules:
 5. Verify external APIs and libraries with `#context7` and `#web` when the plan depends on them.
 6. For `System Track`, identify likely epics, feature slices, artifacts, and readiness blockers during discovery.
 7. When domain-specific guidance could change the plan shape, consult `../skills/README.md`, then load the narrowest relevant `SKILL.md` files.
-8. Do not explore exhaustively before the first clarification round. Once you can name the key user-owned unknowns, move to Alignment.
+8. You MUST perform deep analysis of the codebase using the `Explore` agent, `read`, and `search` tools. Do not do superficial analysis. You must understand the architectural impact, file dependencies, and exact scope BEFORE finalizing the plan.
 
 Examples:
 
@@ -217,9 +217,16 @@ If enabled, include:
 - heartbeat assumptions (interval + timeout)
 - whether `/delegate` is recommended for any branch
 
-## Output (Mandatory)
+## Output
 
-- `Clarification Status: COMPLETE` (required if a plan is provided)
+### When Clarification Status is INCOMPLETE
+If you used `#tool:vscode/askQuestions` or still need user input, STOP and output ONLY:
+- `Clarification Status: INCOMPLETE`
+- A brief summary of what you are analyzing.
+- Do NOT output a plan until the user provides answers.
+
+### When Clarification Status is COMPLETE (Mandatory Format)
+- `Clarification Status: COMPLETE`
 - `Planning Track: Quick Change | Feature Track | System Track`
 - `Summary`
 - `Objective`
@@ -241,7 +248,6 @@ If enabled, include:
 - `Documentation Artifacts` (required for `System Track`, otherwise `SKIP`)
 - `Edge cases`
 - `Scope boundaries`
-- `Open questions` (only if any remain after clarification)
 
 ## Critical Constraints
 
